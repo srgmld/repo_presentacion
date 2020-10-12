@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Rafael López Valverde" />
+
+
+<title>Propuesta de curso</title>
+
+<script src="clases_files/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="clases_files/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="clases_files/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="clases_files/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="clases_files/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="clases_files/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="clases_files/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="clases_files/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="clases_files/navigation-1.1/tabsets.js"></script>
+
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4,h5",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Propuesta de curso</h1>
+<h3 class="subtitle"><em>Análisis y visualización de datos</em></h3>
+<h4 class="author"><em>Rafael López Valverde</em></h4>
+
+</div>
+
+
+<section id="objetivo" class="level1">
+<h1>Objetivo</h1>
+<p>Lograr narrar historias basadas en datos.</p>
+</section>
+<section id="plataformas-para-lograr-el-objetivo" class="level1">
+<h1>Plataformas para lograr el objetivo</h1>
+<p>La realización del curso se basa principalmente en <strong>R</strong> <span class="citation" data-cites="CiteR">(2017)</span>, que es un lenguaje de programación con fines <a href="https://es.wikipedia.org/wiki/R_(lenguaje_de_programación)">estadísticos y de visualización</a>. R es software libre (sin costo) y está disponible para sistemas operativos Windows, Linux y OSx (Apple). La razón para utilizar R como herramienta principal se basa en su potencia y versatilidad así como su amplio uso en enseñanza de periodismo de datos y análisis de datos en programas de universidades como Massachussets Institute of Technology <a href="https://micromasters.mit.edu/dedp/.">MIT</a> o <a href="https://journalismcourses.org/RC0818.html">University of Texas Austin</a> con su curso sobre periodismo de datos en R.</p>
+<p>Ahora bien, R tiene un amplio número de librerías (aplicativos) exclusivos para visualización de datos. Se propone utilizar los mas comunes comunes como <strong>ggplot2</strong> <span class="citation" data-cites="R-ggplot2">(2018)</span> y <strong>highcharter</strong> <span class="citation" data-cites="R-highcharter">(2017)</span>. ggplot2 produce gráficos estáticos . El siguiente gráfico, por ejemplo, fue creado en <strong>ggplot2</strong> y muestra el promedio de hijos nacidos vivos por municipio y por áreas urbanas y rurales en Bolivia. El procesamiento de datos fue también realizado en <strong>R</strong>.</p>
+<p><img src = "graficos/jitter.hijos.png"></p>
+<p>Puede verse también en este tutorial de ggplot2 del Harvard Institute for Quantitative Social Science <span class="citation" data-cites="IQHarvard:P8pgxHpQ">(IQ Harvard, n.d.)</span> como <strong>R</strong> es capaz de crear los gráficos que utiliza el periódico The Economist.</p>
+<p>Por su parte, <strong>highcharter</strong> produce gráficos interactivos, en los que el usuario final puede manipular parcialmente la visualización. Por ejemplo, en el siguiente mapa se muestran 10 procesos electorales en los que participó el Movimiento al Socialismo. En él, puede ponerse en pausa la animación y/o seleccionar cada una de las categorías de votos.</p>
+<iframe frameBorder="0" src="graficos/mapa1.html" width="100%" height="800" allowtransparency="true">
+</iframe>
+<p>Si bien el énfasis estará en R para las visualizaciones, se utilizarán también las siguientes alternativas:</p>
+<ul>
+<li><a href="https://www.datawrapper.de">Data Wrapper</a></li>
+<li><a href="https://public.tableau.com/en-us/s/gallery">Tableau</a></li>
+<li><a href="https://plot.ly">Plotly</a></li>
+<li><a href="https://dive.media.mit.edu">DIVE MIT Media Lab</a></li>
+</ul>
+<p>Para visualizaciones geográficas que requieran, por ejemplo mapas de Google Maps o de <a href="https://www.openstreetmap.org">Open Street Maps</a> también se tendrá a <strong>R</strong> como base y a las librerías <strong>googleway</strong> <span class="citation" data-cites="R-googleway">(2018)</span> para mapas de Google Maps interactivos y <strong>ggmap</strong> <span class="citation" data-cites="R-ggmap">(2016)</span> para mapas de Google Maps estáticos. Sobre este último sugiero revisar el texto académico que detalla la librería: <span class="citation" data-cites="Kahle:2013uv">(Kahle and Wickham 2013)</span></p>
+<p>Para el procesamiento de datos, se utilizará Excel, Google Spreadsheet y R, concretamente utilizando una nueva narrativa de programación, <strong>Tidyverse</strong>, que facilita el lenguaje de forma considerable <span class="citation" data-cites="Rickert:2017vt">(Rickert 2017)</span>.</p>
+</section>
+<section id="metodo-para-lograr-el-objetivo" class="level1">
+<h1>Método para lograr el objetivo</h1>
+<p>Hay dos etapas para aprender a hacer análisis de datos con fines narrativos:</p>
+<ul>
+<li><p>Conocer la arquitectura práctica de una base de datos, teoría sobre análisis cuantitativo, y estadística básica.</p></li>
+<li><p>Saber conseguir manipular y visualizar datos.</p></li>
+</ul>
+<p>Sin el paso 1, el 2 se hace endeble; es una secuencia y cada parte tiene detalles que se narran a continuación:</p>
+<section id="conocer-la-arquitectura-practica-de-una-base-de-datos-teoria-sobre-analisis-cuantitativo-y-estadistica-basica." class="level2">
+<h2>Conocer la arquitectura práctica de una base de datos, teoría sobre análisis cuantitativo, y estadística básica.</h2>
+<p>Una base de datos es una reunión organizada de datos, por tanto se debe comprender que tipo de datos individuales hay: los átomos de una base de datos, los ladrillos que construyen una base. Por ejemplo en la siguiente base de datos de vuelos del aeropuerto de Nueva York <span class="citation" data-cites="R-nycflights13">(Wickham 2017)</span> para el año 2013 pueden identificarse diferentes tipos de variables:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: right;">año</th>
+<th style="text-align: right;">mes</th>
+<th style="text-align: right;">día</th>
+<th style="text-align: right;">hora_salida</th>
+<th style="text-align: right;">hora_programada_salida</th>
+<th style="text-align: right;">atraso_salida</th>
+<th style="text-align: right;">hora_arribo</th>
+<th style="text-align: right;">hora_programada_llegada</th>
+<th style="text-align: right;">atraso_llegada</th>
+<th style="text-align: left;">carrier</th>
+<th style="text-align: right;">vuelo</th>
+<th style="text-align: left;">número_avión</th>
+<th style="text-align: left;">origen</th>
+<th style="text-align: left;">destino</th>
+<th style="text-align: right;">tiempo_vuelo</th>
+<th style="text-align: right;">distancia</th>
+<th style="text-align: right;">hora</th>
+<th style="text-align: right;">minuto</th>
+<th style="text-align: left;">tiempo_hora</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2013</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">517</td>
+<td style="text-align: right;">515</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">830</td>
+<td style="text-align: right;">819</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: left;">UA</td>
+<td style="text-align: right;">1545</td>
+<td style="text-align: left;">N14228</td>
+<td style="text-align: left;">EWR</td>
+<td style="text-align: left;">IAH</td>
+<td style="text-align: right;">227</td>
+<td style="text-align: right;">1400</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: left;">2013-01-01 05:00:00</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2013</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">533</td>
+<td style="text-align: right;">529</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">850</td>
+<td style="text-align: right;">830</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: left;">UA</td>
+<td style="text-align: right;">1714</td>
+<td style="text-align: left;">N24211</td>
+<td style="text-align: left;">LGA</td>
+<td style="text-align: left;">IAH</td>
+<td style="text-align: right;">227</td>
+<td style="text-align: right;">1416</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">29</td>
+<td style="text-align: left;">2013-01-01 05:00:00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2013</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">542</td>
+<td style="text-align: right;">540</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">923</td>
+<td style="text-align: right;">850</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: left;">AA</td>
+<td style="text-align: right;">1141</td>
+<td style="text-align: left;">N619AA</td>
+<td style="text-align: left;">JFK</td>
+<td style="text-align: left;">MIA</td>
+<td style="text-align: right;">160</td>
+<td style="text-align: right;">1089</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: left;">2013-01-01 05:00:00</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2013</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">544</td>
+<td style="text-align: right;">545</td>
+<td style="text-align: right;">-1</td>
+<td style="text-align: right;">1004</td>
+<td style="text-align: right;">1022</td>
+<td style="text-align: right;">-18</td>
+<td style="text-align: left;">B6</td>
+<td style="text-align: right;">725</td>
+<td style="text-align: left;">N804JB</td>
+<td style="text-align: left;">JFK</td>
+<td style="text-align: left;">BQN</td>
+<td style="text-align: right;">183</td>
+<td style="text-align: right;">1576</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: left;">2013-01-01 05:00:00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2013</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">554</td>
+<td style="text-align: right;">600</td>
+<td style="text-align: right;">-6</td>
+<td style="text-align: right;">812</td>
+<td style="text-align: right;">837</td>
+<td style="text-align: right;">-25</td>
+<td style="text-align: left;">DL</td>
+<td style="text-align: right;">461</td>
+<td style="text-align: left;">N668DN</td>
+<td style="text-align: left;">LGA</td>
+<td style="text-align: left;">ATL</td>
+<td style="text-align: right;">116</td>
+<td style="text-align: right;">762</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">2013-01-01 06:00:00</td>
+</tr>
+</tbody>
+</table>
+<p>Por ejemplo la columna de <strong>hora_salida</strong> es una columna numérica, la última columna es de tipo fecha/hora y la columna de <strong>número_avión</strong> es de tipo texto. Cada tipo de columna tiene varias implicaciones para el análisis estadístico; partiendo de que no es posible operar aritméticamente una variable de texto hasta que es posible hacer operaciones econométricas con variables numéricas. Es tambiém muy común que bases de datos construidas en <strong>excel</strong> sean posteriormente importadas con los tipos de columnas equivocados a un procesador de datos. Saber los tipos correctos ayuda, entonces, a corregir estos desperfectos. Un buen resumen del tipo de varibles puede encontrarse en el portal estadístico del gobierno australiano <span class="citation" data-cites="AustralianBureauofStatistics:n6r7ejht">(Australian Bureau of Statistics, n.d.)</span>.</p>
+<p>Así mismo, hay extensa teoría de cómo organizar una base de datos evitando problemas comunes <span class="citation" data-cites="Wickham:2014if">(Wickham 2014)</span>, que se utilizarán para conocer cuáles son los parámetros para saber si una base de datos está limpia o no.</p>
+<p>Respecto a teoría de análisis cuantitativo y estadística básica, se utilizará básicamente estadística descriptiva y aspectos muy básicos de estadística inferencial. Esta parte se basará en el curso de Data Analysis for Social Scientist dictado en línea por el <a href="https://www.edx.org/es/course/data-analysis-for-social-scientists-0">MIT</a>. Se conocerá cómo elegir un representante para todo un grupo de datos, por ejemplo, el promedio o el dato que más se repite (moda). Asimismo, se conocerá como se desvían los datos de nuestra elección de representante.¿Cuán dispersos están los datos de nuestro representante?. Aquí se analizan herramientas como la desviación estándar.</p>
+<p>Asimismo, se aprenderá a relacionar dos o más variables. Digamos por ejemplo que queremos saber el impacto del estudio sobre el crecimiento de un país. Para esto se utiliza estadística inferencial.</p>
+<p>En síntesis: esta primera parte consiste en saber lo básico pero fundamental.</p>
+</section>
+<section id="saber-conseguir-manipular-y-visualizar-datos" class="level2">
+<h2>Saber conseguir manipular y visualizar datos</h2>
+<p>La segunda parte puede resumirse en este gráfico <span class="citation" data-cites="wickham2016r">(H. Wickham and Grolemund 2016)</span>:</p>
+<p><img src = "graficos/ciclo.png"></p>
+<p>Importar implica saber buscar y/o saber descargar información de donde se sabe que hay datos. en En esta parte se enseñará:</p>
+<ul>
+<li><p>A importar formatos de almacenamiento de datos, por ejemplo, archivos con extensión .csv. El formato determina la forma de descarga.</p></li>
+<li>Conocer como descargar bases de datos del internet:
+<ul>
+<li>De tablas de Wikipedia, por ejemplo. Para descagar bases de datos como <a href="https://es.wikipedia.org/wiki/Anexo:Pa%C3%ADses_por_orden_cronológico_según_su_independencia">esta</a> existen métodos y librerías de <strong>R</strong> como <strong>rvest</strong> <span class="citation" data-cites="R-rvest">(2016)</span></li>
+<li>De twitter. Existen al menos dos librerías para poder descargar los tweets de un usuario y todas las características de los mismos, como por ejemplo, de que dispositivo móvil se ha emitido el tweet, a que hora, día, etc. Se enseñará a importar las bases de datos a partir de la librería <strong>rtweet</strong> <span class="citation" data-cites="R-rtweet">(2018)</span>. Puede verse <a href="https://alex-roc.github.io/EvoTwitter/">aquí un análisis de los tweets del Presidente Evo Morales</a> como ejemplo.</li>
+<li>Del Banco Mundial. El Banco mundial ha producido dos libreríasa para R que permiten la descarga directa de todas sus bases de datos: <strong>data360r</strong> <span class="citation" data-cites="R-data360r">(2017)</span> y <strong>WDI</strong> <span class="citation" data-cites="R-WDI">(2013)</span> . <a href="https://rafalopezv.io//data%20analysis/r/evocrecimiento/">Aquí puede encontrarse un ejemplo</a> de un análisis sobre crecimiento del Producto Interno Bruto en Latinoamérica utilizando una de estas librerías</li>
+</ul></li>
+</ul>
+<p>Asimismo, muchas veces se trabaja con varias bases de datos a la vez, entonces, se debe aprender a importar más de una base de datos al mismo tiempo.</p>
+<p>Limpiar es la parte más delicada y morosa. Consiste en cumplir con el primer paso y lograr formatear una base de datos hasta que sea trabajable. En esta etapa son innumerables los problemas que pueden ocurrir y se orientará en solucionar los más típicos.<span class="citation" data-cites="deJonge:2013va">(Jonge and Loo 2013)</span></p>
+<p>Transformar, modelar y visualizar no es otra cosa que convertir los datos que cumplan con el fin de la publicación. Por ejemplo, si es una base de datos de elecciones, probablemente sea más eficiente convertir los datos en porcentajes. La visualización en esta etapa es solo para conocer las características de los datos, no para presentar el resultado final</p>
+<p>Comunicar es la mejor parte. Aquí las imágenes son muy valiosas y pueden ser, como se anticipó:</p>
+<ul>
+<li>Estáticas. Son las que vemos en cualquier periódico impreso</li>
+<li>Interactivas. Son las que vemos en internet y son reactivas. Son las que nos permiten interactuar con el gráfico. (como el mapa de Bolivia presentado previamente)</li>
+<li>Aplicaciones. Son aquellas en las que el usuario tiene mucho control sobre el gráfico. <a href="https://www.infobae.com/america/deportes/goles-mundial-rusia-2018/">Aquí un ejemplo</a>. Se enseñará nociones básicas de cómo crear aplicaciones y como publicarlas</li>
+</ul>
+<p>Para la parte de comunicación se enseñará a crear una página web, como la que contiene esta propuesta.</p>
+</section>
+</section>
+<section id="tiempos" class="level1">
+<h1>Tiempos</h1>
+<p>El curso está dividido en dos partes:</p>
+<ul>
+<li><p>Conocer la arquitectura práctica de una base de datos y teoría aplicada de estadística general</p>
+<ul>
+<li>Estadística básica: 4 horas</li>
+<li>El ABC de las bases de datos: 2 horas</li>
+</ul></li>
+<li><p>Saber conseguir manipular y visualizar datos</p>
+<ul>
+<li>Importar: 4 horas</li>
+<li>Limpiar: 5 horas</li>
+<li>Manipular: 3 horas</li>
+<li>Visualizar: 6 horas</li>
+</ul></li>
+</ul>
+</section>
+<section id="sobre-la-propuesta" class="level1">
+<h1>Sobre la propuesta</h1>
+<p>Esta propuesta se construyó íntegramente en <strong>R</strong> y varias de las librerías mencionadas.</p>
+</section>
+<section id="cv-y-portafolio" class="level1">
+<h1>CV y portafolio</h1>
+<ul>
+<li>Enlace a mi <a href="https://rafalopezv.io//assets/pdf/cv.es.pdf">hoja de vida</a></li>
+<li>Enlace a mi <a href="https://rafalopezv.io">portafolio</a></li>
+<li><i class="fa fa-envelope"></i><a href="mailto:lopezvalverde.rafael@gmail.com">lopezvalverde.rafael@gmail.com</a></li>
+</ul>
+<p><a href="mailto:lopezvalverde.rafael@gmail.com"><i class="fa fa-envelope"></i> lopezvalverde.rafael@gmail.com</a></p>
+</section>
+<section id="referencias" class="level1 unnumbered">
+<h1>Referencias</h1>
+<div id="refs" class="references">
+<div id="ref-R-WDI">
+<p>Arel-Bundock, Vincent. 2013. <em>WDI: World Development Indicators (World Bank)</em>. <a href="https://CRAN.R-project.org/package=WDI" class="uri">https://CRAN.R-project.org/package=WDI</a>.</p>
+</div>
+<div id="ref-AustralianBureauofStatistics:n6r7ejht">
+<p>Australian Bureau of Statistics. n.d. “Statistical Language - What are Variables?” <a href="http://www.abs.gov.au/websitedbs/a3121120.nsf/home/statistical+language+-+what+are+variables" class="uri">http://www.abs.gov.au/websitedbs/a3121120.nsf/home/statistical+language+-+what+are+variables</a>.</p>
+</div>
+<div id="ref-R-data360r">
+<p>c, Authors@R: and person). 2017. <em>Data360r: Wrapper for Tc/Govdata360 Api</em>. <a href="https://github.com/mrpsonglao/data360r" class="uri">https://github.com/mrpsonglao/data360r</a>.</p>
+</div>
+<div id="ref-R-googleway">
+<p>Cooley, David. 2018. <em>Googleway: Accesses Google Maps Apis to Retrieve Data and Plot Maps</em>. <a href="https://CRAN.R-project.org/package=googleway" class="uri">https://CRAN.R-project.org/package=googleway</a>.</p>
+</div>
+<div id="ref-IQHarvard:P8pgxHpQ">
+<p>IQ Harvard. n.d. “Why ggplot2?” <a href="https://tutorials.iq.harvard.edu/R/Rgraphics/Rgraphics.html#introduction" class="uri">https://tutorials.iq.harvard.edu/R/Rgraphics/Rgraphics.html#introduction</a>.</p>
+</div>
+<div id="ref-deJonge:2013va">
+<p>Jonge, Edwin de, and Mark van der Loo. 2013. “An introduction to data cleaning with R.” <a href="https://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf" class="uri">https://cran.r-project.org/doc/contrib/de_Jonge+van_der_Loo-Introduction_to_data_cleaning_with_R.pdf</a>.</p>
+</div>
+<div id="ref-R-ggmap">
+<p>Kahle, David, and Hadley Wickham. 2016. <em>Ggmap: Spatial Visualization with Ggplot2</em>. <a href="https://CRAN.R-project.org/package=ggmap" class="uri">https://CRAN.R-project.org/package=ggmap</a>.</p>
+</div>
+<div id="ref-Kahle:2013uv">
+<p>Kahle, D, and H Wickham. 2013. “ggmap: Spatial visualization with ggplot2.” <em>The R Journal</em> 5 (1): 144–61. <a href="https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf" class="uri">https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf</a>.</p>
+</div>
+<div id="ref-R-rtweet">
+<p>Kearney, Michael W. 2018. <em>Rtweet: Collecting Twitter Data</em>. <a href="https://CRAN.R-project.org/package=rtweet" class="uri">https://CRAN.R-project.org/package=rtweet</a>.</p>
+</div>
+<div id="ref-R-highcharter">
+<p>Kunst, Joshua. 2017. <em>Highcharter: A Wrapper for the ’Highcharts’ Library</em>. <a href="https://CRAN.R-project.org/package=highcharter" class="uri">https://CRAN.R-project.org/package=highcharter</a>.</p>
+</div>
+<div id="ref-CiteR">
+<p>R Core Team. 2017. <em>R: A Language and Environment for Statistical Computing</em>. Vienna, Austria: R Foundation for Statistical Computing. <a href="https://www.R-project.org/" class="uri">https://www.R-project.org/</a>.</p>
+</div>
+<div id="ref-Rickert:2017vt">
+<p>Rickert, Joseph. 2017. “What is the tidyverse?” <a href="https://rviews.rstudio.com/2017/06/08/what-is-the-tidyverse/" class="uri">https://rviews.rstudio.com/2017/06/08/what-is-the-tidyverse/</a>.</p>
+</div>
+<div id="ref-Wickham:2014if">
+<p>Wickham, Hadley. 2014. “Tidy Data.” <em>Journal of Statistical Software</em> 59 (10). <a href="https://www.jstatsoft.org/article/view/v059i10/v59i10.pdf" class="uri">https://www.jstatsoft.org/article/view/v059i10/v59i10.pdf</a>.</p>
+</div>
+<div id="ref-R-rvest">
+<p>———. 2016. <em>Rvest: Easily Harvest (Scrape) Web Pages</em>. <a href="https://CRAN.R-project.org/package=rvest" class="uri">https://CRAN.R-project.org/package=rvest</a>.</p>
+</div>
+<div id="ref-R-nycflights13">
+<p>———. 2017. <em>Nycflights13: Flights That Departed Nyc in 2013</em>. <a href="https://CRAN.R-project.org/package=nycflights13" class="uri">https://CRAN.R-project.org/package=nycflights13</a>.</p>
+</div>
+<div id="ref-R-ggplot2">
+<p>Wickham, Hadley, Winston Chang, Lionel Henry, Thomas Lin Pedersen, Kohske Takahashi, Claus Wilke, and Kara Woo. 2018. <em>Ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics</em>. <a href="https://CRAN.R-project.org/package=ggplot2" class="uri">https://CRAN.R-project.org/package=ggplot2</a>.</p>
+</div>
+<div id="ref-wickham2016r">
+<p>Wickham, Hadley, and Garrett Grolemund. 2016. <em>R for Data Science: Import, Tidy, Transform, Visualize, and Model Data</em>. &quot; O’Reilly Media, Inc.&quot;. <a href="http://r4ds.had.co.nz" class="uri">http://r4ds.had.co.nz</a>.</p>
+</div>
+</div>
+</section>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

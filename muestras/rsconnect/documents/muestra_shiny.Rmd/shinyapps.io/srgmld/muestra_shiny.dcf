@@ -1,0 +1,12 @@
+name: muestra_shiny
+title: muestra_shiny
+username:
+account: srgmld
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2821297
+bundleId: 3635802
+url: https://srgmld.shinyapps.io/muestra_shiny/
+when: 1600270123.35957
+asMultiple: FALSE
+asStatic: FALSE

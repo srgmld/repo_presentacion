@@ -1,0 +1,7 @@
+"0","library(flexdashboard)"
+"0","library(tidyverse)"
+"0","library(highcharter)"
+"0","library(lubridate)"
+"0","venta_pret <-  rio::import(""input/vendedores_pret.xlsx"") %>% mutate(gestion = year(fecha)) %>% "
+"0","  filter(!vendedor %in% c(""Carlos Taborga"", ""Vladimir Gálvez""), gestion != 2009)"
+"0",""

@@ -1,0 +1,555 @@
+library(tidyverse)
+library(highcharter)
+library(magrittr)
+
+
+df <- data_frame(mercado = c("Tecnología Energía Renovable", "Tecnología Energía Renovable", 
+                                "Big Data", "Big Data",
+                             "Motores Automóviles", "Motores Automóviles"),
+                 gestion = rep(c(2020,2025),3),
+                 valor = c(184.3, 226.1,138.9,229.4,20.3, 25.7))
+
+
+hchart(df, type = "column",
+       hcaes(x = gestion, y = valor, group = mercado)) %>% 
+  hc_chart(style = list(fontFamily = "Source Code Pro")) %>% 
+  hc_add_theme(hc_theme_smpl()) %>%
+  hc_yAxis(title = list(text = "Billones $us")) %>% 
+  hc_tooltip(crosshairs = TRUE, shared = TRUE) %>% 
+  hc_xAxis(
+           title = list(text = "")) %>% 
+  hc_title(text = "Valor del mercado de Big Data",
+           style = list(fontFamily = "Source Code Pro")) %>% 
+  # hc_subtitle(text = "Crecimiento del 10.6% anual",
+  #             style = list(fontFamily = "Source Code Pro")) %>% 
+  hc_credits(enabled = TRUE, text = "Markets and Markets", 
+             href = "https://www.marketsandmarkets.com/Market-Reports/big-data-market-1068.html") %>% 
+  htmlwidgets::saveWidget(here::here("muestras/market_bigdata.html"))
+  
+  
+
+
+
+
+df <- data_frame(gestion = c(2018:2025), 
+                 datos =  c(33,
+                            round(33*1.16^2,2),
+                            59,
+                            round(59*1.16^1.5,2),
+                            round(59*1.16^3,2),
+                            round(59*1.16^4.5,2),
+                            round(59*1.16^6,2),
+                            175),
+                 fuente = c("IDC", "int", "IDC", "int", "int", "int", "int", "IDC"))  
+
+
+
+hchart(df, type = "column",
+       hcaes(x = gestion, y = datos, group = fuente)) %>% 
+  hc_chart(style = list(fontFamily = "Source Code Pro")) %>% 
+  hc_add_theme(hc_theme_smpl()) %>% 
+  hc_xAxis(categories = c(2018:2025),
+           title = list(text = "")) %>% 
+  hc_tooltip(
+    valueDecimals = 2, borderWidth = 0.8,
+    style = list(fontSize = 15),
+    pointFormat=paste("<b>{point.datos}</b> Zettabytes"),
+    headerFormat = "",
+    borderWidth = 0.8) %>% 
+  hc_yAxis(title = list(text = "Zettabytes")) %>% 
+  hc_title(text = "Cantidad de datos global",
+           style = list(fontFamily = "Source Code Pro")) %>% 
+  hc_subtitle(text = "1 Zettabyte = 10^21 byte = 1 trillon GB",
+              style = list(fontFamily = "Source Code Pro")) %>% 
+  hc_credits(enabled = TRUE, text = "Data Age 2025 - IDC", 
+             href = "https://www.seagate.com/files/www-content/our-story/trends/files/idc-seagate-dataage-whitepaper.pdf") %>% 
+htmlwidgets::saveWidget(here::here("muestras/data_size.html"))
+  
+
+
+  
+  
+#-----
+# Muestras general
+#-----
+
+
+#-----
+#Dependency wheel demandante vs demandado
+#--------
+
+
+df1 <- rio::import("muestras/input/muestra_dependency.xlsx")
+
+df1 <- df1 %>% filter(weight > 50)
+
+df1 <- left_join(df1, data.frame(from = unique(c(df1$from, df1$to)), from2 = c(1:22)) %>% 
+            mutate(from2 = paste0("Sector ", from2)))
+
+df1 <- left_join(df1, data.frame(to = unique(c(df1$from, df1$to)), to2 = c(1:22)) %>% 
+                   mutate(to2 = paste0("Sector ", to2)))
+
+df1 <- df1 %>% select(from = from2, to = to2, weight)
+
+dependency <- highchart() %>%
+  hc_chart(
+    type = "dependencywheel",
+    polar = FALSE,
+    inverted = FALSE, 
+    style = list(fontFamily = "Oswald")
+  ) %>% 
+  hc_xAxis(
+    categories = df1$from
+  ) %>% 
+  hc_yAxis(
+    visible = TRUE
+  ) %>% 
+  hc_colors(c(rep(c("#E01F52", "#C6A659", "#06D6A0", "#466B77", "#073B4C",
+                    "#D8B970", "#5FA1B7", "#118AB2", "#BAAB89", "#1E4D5C",
+                    "#2C6E49", "#E07A5F", "#3D405B", "#81B29A", "#63585F",
+                    "#B4B5BA", "#261F23", "#575D7C", "#9194C6", "#75184D"), 2),
+              "#FCBF49", "#F77F00", "#1478AA")) %>%
+  # hc_add_theme(hc_theme_smpl()) %>% 
+  hc_add_series(
+    df1,
+    name = "",
+    showInLegend = FALSE
+  ) %>% 
+  hc_tooltip(
+    outside = TRUE,
+    style = list(fontFamily = "Oswald", fontSize = 15),
+    borderWidth = 0.01,
+    backgroundColor =  "white"
+  ) %>% 
+  hc_plotOptions(
+    dependencywheel = list(
+      dataLabels = list(
+        enabled = T,
+        align = "left",
+        verticalAlign = "top",
+        style = list(fontSize = "13px", textOutline = FALSE, color = "black")
+      )
+    )
+  )
+
+dependency %>% htmlwidgets::saveWidget(here::here("muestras/dependency_muestra.html"))
+
+
+
+# WAFFLE CHART
+
+df <- rio::import("muestras/input/base_limpia.xlsx")
+
+# razones conflicto
+temp <- df %>% 
+  select(id, tipo) %>% 
+  unique() %>% 
+  count(tipo) %>% 
+  mutate(
+    x_100 = round(n/10, 0),
+    prop = prop.table(n)*100,
+    prop = round(prop, 2)
+  ) %>% 
+  arrange(desc(x_100)) 
+
+temp <- left_join(temp, data.frame(tipo = unique(temp$tipo), sistema = c(1:17))) %>% 
+  mutate(tipo = paste0("Sistema ", sistema)) %>% 
+  select(-sistema) %>% filter(n >290)
+
+temp %>% 
+  hchart(
+    "item", 
+    hcaes(name = tipo, y = x_100),
+    marker = list(symbol = "square"),
+    showInLegend = TRUE
+  ) %>% 
+  hc_colors(colors = c("#264653","#2a9d8f","#e9c46a","#f4a261","#e76f51", "#e63946","#d90429", "#50514f", "#293241")) %>% 
+  hc_chart(style = list(fontFamily = "Oswald")) %>% 
+  hc_tooltip(enabled = T, valueDecimals = 2, borderWidth = 0.01, 
+             style = list(fontFamily = "Oswald"), backgroundColor =  "white",
+             pointFormat=paste("<b>{point.tipo}</b><br>
+                               <b>{point.n}</b> fallas<br>
+                               <b>{point.prop} %</b> sobre el total<br>"),
+             headerFormat = "") -> razones_fallas
+
+
+razones_fallas %>% htmlwidgets::saveWidget(here::here("muestras/razones_fallas.html"))
+
+
+#------
+# Treemap
+#-------
+
+df <- rio::import("muestras/input/base_limpia.xlsx")
+
+
+temp <- df %>% group_by(sector_a) %>% 
+  mutate(total = n()) %>% 
+  mutate(porcentaje = (total/sum(unique(.$total)))*100) %>% 
+  ungroup() %>%  
+  # \filter(porcentaje > 1) %>% 
+  mutate(sector_a = ifelse(porcentaje < 1, "Otro2", sector_a)) %>%
+  count(sector_a, sub_sector_a) %>% 
+  mutate(
+    porcentaje = prop.table(n)*100,
+    porcentaje = round(porcentaje, 3)
+  ) %>% 
+  mutate_if(is.character, replace_na, "Sin clasficación") %>% 
+  rename(value = n) %>% 
+  arrange(sector_a, desc(value))
+  
+
+colores <- temp %>% select(sector_a) %>% unique
+
+col <- rep(c("#E01F52", "#C6A659", "#06D6A0", "#466B77", "#073B4C", 
+             "#D8B970", "#5FA1B7", "#118AB2", "#BAAB89", "#1E4D5C", 
+             "#2C6E49", "#E07A5F", "#3D405B", "#81B29A", "#63585F", 
+             "#B4B5BA", "#261F23", "#575D7C", "#9194C6", "#75184D"), 2)
+
+col <- col[1: nrow(colores)]
+
+colores %<>% 
+  mutate(
+    color = col
+  )
+
+temp %<>% merge(., colores, alll.x = T)
+
+lvl_opts <-  list(
+  list(
+    level = 1,
+    borderWidth = 0,
+    borderColor = "transparent",
+    dataLabels = list(
+      enabled = TRUE,
+      align = "left",
+      verticalAlign = "top",
+      style = list(fontSize = "13px", textOutline = FALSE, color = "white")
+    )
+  ),
+  list(
+    level = 2,
+    borderWidth = 0,
+    borderColor = "transparent",
+    colorVariation = list(key = "brightness", to = 0.250),
+    dataLabels = list(
+      enabled = F,
+      align = "left",
+      verticalAlign = "top",
+      style = list(fontSize = "13px", textOutline = FALSE, color = "white")
+    ),
+    style = list(fontSize = "9px", textOutline = FALSE, color = "white")
+  )
+)
+
+
+
+
+temp <- left_join(left_join(temp, data.frame(sector_a = unique(temp$sector_a), sistema = c(1:length(unique(temp$sector_a))))) %>% 
+            mutate(sector_a = paste0("Categoría ", sistema)) %>% 
+            select(-sistema),
+          data.frame(sub_sector_a = unique(temp$sub_sector_a), sistema = c(1:length(unique(temp$sub_sector_a))))) %>% 
+  mutate(sub_sector_a = paste0("Sub - categoría ", sistema)) %>% 
+  select(-sistema)
+
+
+cols <- temp %>% pull(color) %>% unique
+
+
+
+
+hchart(
+  data_to_hierarchical(temp, c(sector_a, sub_sector_a), porcentaje, colors = cols),
+  type = "treemap",
+  levelIsConstant = T,
+  allowDrillToNode = T,
+  drillUpButton = list(
+    text = "< Volver"
+  ),
+  levels = lvl_opts,
+  tooltip = list(valueDecimals = 2) 
+) %>% 
+  hc_chart(
+    style = list(fontFamily = "Oswald")
+  ) %>% 
+  hc_size(height = 700) %>% 
+  hc_tooltip(backgroundColor =  "white", borderWidth =  0.001 ) -> tree_map_1
+
+tree_map_1 %>% htmlwidgets::saveWidget(here::here("muestras/treemap.html"))
+
+
+
+
+#------
+# Barras sector vs nivel
+#------
+
+df <- rio::import("muestras/input/base_limpia.xlsx")
+
+conflictos <- df %>% 
+  mutate(year = lubridate::year(fecha))
+
+temp <- merge((conflictos %>% select(id, sector_a) %>% distinct()),
+              (conflictos %>% filter(nivel > 0) %>% select(id, nivel) %>% distinct())) %>% 
+  group_by(sector_a, nivel) %>% 
+  summarise(cantidad = n()) %>% 
+  ungroup() %>% 
+  mutate(porcentaje = prop.table(cantidad)*100) %>% 
+  arrange(desc(cantidad)) %>% 
+  group_by(sector_a) %>% 
+  mutate(total = sum(cantidad)) %>% select(-porcentaje) %>% 
+  ungroup() %>%
+  mutate(
+    nivel = case_when(
+      nivel == 1 ~ "Nivel 1",
+      nivel == 2 ~ "Nivel 2",
+      nivel == 3 ~ "Nivel 3",
+      nivel == 4 ~ "Nivel 4",
+      nivel == 5 ~ "Nivel 5",
+    )
+  ) %>% 
+  spread(nivel, cantidad) %>% 
+  arrange(desc(total))
+
+temp <- left_join(temp, data.frame(sector_a = unique(df$sector_a), valvula = c(1:length(unique(df$sector_a))))) %>% 
+  mutate(sector_a = paste0("Válvula ", valvula)) %>% 
+  select(-valvula) %>% 
+  filter(total > 500)
+
+temp[is.na(temp)] <- 0
+
+a_1 <- as.data.frame(temp) %>% rename(Demandante = sector_a)
+
+categories_column <- "Demandante"
+measure_columns <- c(colnames(a_1[3:length(a_1)]))
+
+
+hbr_sn <- highchart() %>%
+  hc_xAxis(categories = a_1[, categories_column],
+           title = categories_column)
+
+
+invisible(lapply(measure_columns, function(column) {
+  hbr_sn <<-
+    hc_add_series(hc = hbr_sn, name = column,
+                  data = a_1[, column])
+}))
+
+
+
+hbr_sector_nivel <- hbr_sn %>%
+  hc_chart(type = "bar") %>%
+  hc_plotOptions(series = list(stacking = "normal")) %>%
+  hc_legend(reversed = TRUE) %>% 
+  # hc_colors(c("#06D6A0", 
+  #             "#C6A659",
+  #             "#82769D",
+  #             "#E01F52",
+  #             "#073B4C"
+  # )) %>%
+  hc_add_theme(hc_theme_elementary()) %>%
+  hc_tooltip(enabled = T, valueDecimals = 0, borderWidth = 0.01,
+             crosshairs = TRUE, shared = TRUE, backgroundColor = "white",
+             style = list(fontFamily = "Oswald",
+                          color = "black", fontSize = 13),
+             headerFormat = "<br><b>{point.key}</b><br>
+                              <br>Total: <b>{point.total}</b><br>") %>%
+  hc_chart(backgroundColor="#FFFFFF", style = list(fontFamily = "Oswald",
+                                                   color = "black")) %>% 
+  hc_size(height = 800)
+
+hbr_sector_nivel %>% htmlwidgets::saveWidget(here::here("muestras/barras_valvulas.html"))
+
+
+
+
+#------
+# Drill Down Niveles vs años
+#------
+
+df <- rio::import("muestras/input/base_limpia.xlsx")
+
+conflictos <- df %>% 
+  mutate(year = lubridate::year(fecha))
+
+
+temp1 <-  conflictos %>% filter(nivel > 0, year >= 2010) %>% select(id, nivel, year) %>% 
+  # distinct() %>% 
+  group_by(year, nivel) %>% 
+  summarise(cantidad = n()) %>% 
+  group_by(year) %>% 
+  mutate(total = sum(cantidad)) %>%
+  ungroup() %>%
+  mutate(
+    nivel = case_when(
+      nivel == 1 ~ "Producto 1",
+      nivel == 2 ~ "Producto 2",
+      nivel == 3 ~ "Producto 3",
+      nivel == 4 ~ "Producto 4",
+      nivel == 5 ~ "Producto 5"
+    )
+  ) %>% group_by(nivel) %>% 
+  summarise(cantidad = sum(cantidad))
+
+
+
+left_join(conflictos %>% filter(nivel > 0, year >= 2010) %>% select(id, nivel, year) %>% 
+  # distinct() %>% 
+  group_by(year, nivel) %>% 
+  summarise(cantidad = n()) %>% 
+  group_by(year) %>% 
+  mutate(total = sum(cantidad)) %>%
+  ungroup() %>%
+  mutate(
+    nivel = case_when(
+      nivel == 1 ~ "Producto 1",
+      nivel == 2 ~ "Producto 2",
+      nivel == 3 ~ "Producto 3",
+      nivel == 4 ~ "Producto 4",
+      nivel == 5 ~ "Producto 5"
+    )
+  ), data.frame(year = unique(conflictos %>% filter(nivel > 0, year >= 2010) %>% select(year) %>% arrange(year)), 
+                mes = c("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", 
+                        "Agosto", "Septiembre", "Octubre", "Noviembre"))) %>% 
+  mutate(year = mes) %>% select(-mes)
+
+
+temp2 <- left_join(conflictos %>% filter(nivel > 0, year >= 2010) %>% select(id, nivel, year) %>% 
+                     # distinct() %>% 
+                     group_by(year, nivel) %>% 
+                     summarise(cantidad = n()) %>% 
+                     group_by(year) %>% 
+                     mutate(total = sum(cantidad)) %>%
+                     ungroup() %>%
+                     mutate(
+                       nivel = case_when(
+                         nivel == 1 ~ "Producto 1",
+                         nivel == 2 ~ "Producto 2",
+                         nivel == 3 ~ "Producto 3",
+                         nivel == 4 ~ "Producto 4",
+                         nivel == 5 ~ "Producto 5"
+                       )
+                     ), data.frame(year = unique(conflictos %>% filter(nivel > 0, year >= 2010) %>% select(year) %>% arrange(year)), 
+                                   mes = c("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", 
+                                           "Agosto", "Septiembre", "Octubre", "Noviembre"))) %>% 
+  mutate(year = mes) %>% select(-mes) %>% 
+  group_nest(nivel) %>% 
+  mutate(
+    id = nivel,
+    type = "column",
+    data = map(data, mutate, name = year, y = cantidad),
+    data = map(data, list_parse)
+  )
+
+
+
+
+x <- c("Cantidad")
+y <- c("{point.cantidad}")
+
+tt <- tooltip_table(x,y)
+
+nivel_drill <- hchart(
+  temp1,
+  "column",
+  hcaes(x = nivel, y = cantidad, name = nivel, drilldown = nivel),
+  name = "Cantidad",
+  colorByPoint = TRUE
+) %>% 
+  hc_drilldown(
+    allowPointDrilldown = TRUE,
+    series = list_parse(temp2)
+  ) %>% 
+  hc_tooltip(
+    pointFormat = tt, # "{point.name} {point.pop}"
+    useHTML = TRUE,
+    valueDecimals = 0
+  ) %>% 
+  hc_yAxis(
+    title = list(text = "Porductos entregados"),
+    # type = "logarithmic",
+    minorTickInterval = 'auto'
+  ) %>% 
+  hc_xAxis(
+    title = ""
+  ) %>% 
+  # hc_colors(c("#06D6A0", 
+  #             "#C6A659",
+  #             "#82769D",
+  #             "#E01F52",
+  #             "#073B4C"
+  # )) %>% 
+  hc_add_theme(hc_theme_elementary()) %>%
+  hc_chart(style = list(fontFamily = "Oswald"))
+
+
+nivel_drill %>% htmlwidgets::saveWidget(here::here("muestras/drill_barras.html"))
+
+
+
+
+#------
+# Heat map tipos vs medidas
+#------
+
+
+df <- rio::import("muestras/input/base_limpia.xlsx")
+
+conflictos <- df %>% 
+  mutate(year = lubridate::year(fecha))
+
+temp <- conflictos %>% mutate(gestion = lubridate::year(fecha)) %>% 
+  filter(gestion >= 2010) %>% 
+  select(id, tipo, medida_de_presion) %>% 
+  group_by(tipo, medida_de_presion) %>% 
+  summarise(frecuencia = n()) %>% 
+  filter(tipo != "Otro") %>% 
+  spread(medida_de_presion, frecuencia) %>% 
+  mutate_if(is.numeric, replace_na, 0) %>% 
+  gather(medida_de_presion, frecuencia, -tipo)
+
+
+temp <- temp %>% group_by(tipo) %>% 
+  mutate(total = sum(frecuencia)) %>% 
+  ungroup() %>% 
+  filter(total > 200) %>% 
+  group_by(medida_de_presion) %>% 
+  mutate(total = sum(frecuencia)) %>% 
+  ungroup() %>% 
+  filter(total > 200) %>% select(-total)
+
+temp <- left_join(left_join(temp, data.frame(tipo = unique(temp$tipo), vendedor = c(1:length(unique(temp$tipo))))) %>% 
+            mutate(tipo = paste0("Vendedor ", vendedor)) %>% select(-vendedor),
+          data.frame(medida_de_presion = unique(temp$medida_de_presion), barrio = c(1:length(unique(temp$medida_de_presion))))) %>% 
+  mutate(medida_de_presion = paste0("Barrio ", barrio)) %>% select(-barrio)
+
+
+hchart(temp,
+       "heatmap",
+       hcaes(
+         x = medida_de_presion,
+         y = tipo,
+         value = frecuencia
+       )) %>% 
+  hc_colorAxis(
+    stops = color_stops(4, c("#222438", "#E07A5F", "#F2CC8F", "#BBEAD3"))
+  ) %>% 
+  hc_chart(backgroundColor="white", borderColor = "transparent", 
+           style=list(fontFamily = "Oswald", fontSize = 12)) %>% 
+  hc_yAxis(mayorGridLineWidth = 1, 
+           gridLineColor = "white",
+           title = list(
+             text = "Nombre Vendedor")) %>% 
+  hc_xAxis(mayorGridLineWidth = 1,
+           minorGridLineWidth = 5, 
+           gridLineColor = "white", 
+           title = list(text = "Nombre del Barrio")) %>% 
+  hc_tooltip(enabled = T, valueDecimals = 2, borderWidth = 0.01, 
+             style = list(fontFamily = "Oswald"),
+             pointFormat=paste("
+                               <b>{point.frecuencia}</b> productos cerrados<br>"),
+             headerFormat = "") %>% 
+  hc_size(height = 800) -> heat_tipo_med
+
+
+heat_tipo_med %>% htmlwidgets::saveWidget(here::here("muestras/heatmap_vendedores.html"))

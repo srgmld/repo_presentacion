@@ -1,0 +1,166 @@
+---
+title: "Muestra Gráficos Data Science"
+author: ""
+date: ""
+output: 
+  html_document:
+    toc: yes
+    self_contained: true
+    fig_captation: yes
+    toc_float: yes
+    toc_depth: 3
+    number_sections: no
+    css: css/style.css
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(tidyverse)
+library(quantmod)
+library(highcharter)
+
+```
+
+
+# Base de datos población AI
+
+## Mapa Densidades Bolivia
+
+<iframe frameBorder="0" src="https://rafalopezv.io/static/mapa_ciudades_fb.html" width="100%" height=800 allowtransparency="true" allowfullscreen></iframe>
+
+<br>
+<br>
+<br>
+
+## Gráfico Categorización Territorios
+
+<iframe frameBorder="0" src="muestras/hc_cat_base1.html" width="100%" height=600 allowtransparency="true" allowfullscreen></iframe>
+
+<br>
+<br>
+<br>
+
+## Mapa con capas y categorías
+
+<iframe frameBorder="0" src="muestras/mapa_catmun_pob.html" width="100%" height = 800 allowtransparency="true"></iframe>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+
+
+## Mapa densidades Calacoto
+
+<iframe frameBorder="0" src="muestras/prueba_Calacoto.html" width="100%" height=800 allowtransparency="true" allowfullscreen></iframe>
+
+<br>
+<br>
+<br>
+
+
+# Gáficos General
+
+## Rueda de Dependencia
+
+<iframe frameBorder="0" src="muestras/dependency_muestra.html" width="100%" height = 650 allowtransparency="true"></iframe>
+
+<br>
+<br>
+<br>
+
+## Barra Niveles Válvulas
+
+<iframe frameBorder="0" src="muestras/barras_valvulas.html" width="100%" height=800 allowtransparency="true"></iframe>
+
+<br>
+<br>
+<br>
+
+## Barras entrega productos
+
+<iframe frameBorder="0" src="muestras/drill_barras.html" width="100%" height=650 allowtransparency="true"></iframe>
+
+<br>
+<br>
+<br>
+
+## Fallas en Sistemas
+
+<iframe frameBorder="0" src="muestras/razones_fallas.html" width="100%" height=500 allowtransparency="true"></iframe>
+
+<br>
+<br>
+<br>
+
+## Treemap Sub-Sistemas
+
+<iframe frameBorder="0" src="muestras/treemap.html" width="100%" height=700 allowtransparency="true"></iframe>
+
+<br>
+<br>
+<br>
+
+
+## Heatmap Vendedores - Barrios
+
+<iframe frameBorder="0" src="muestras/heatmap_vendedores.html" width="100%" height=800 allowtransparency="true"></iframe>
+
+<br>
+<br>
+<br>
+
+## Lineas de Tiempo - Finanzas
+
+```{r, message=FALSE, warning=FALSE}
+SPY <- getSymbols("SPY", from = Sys.Date() - lubridate::years(1), auto.assign = FALSE)
+SPY <- adjustOHLC(SPY)
+
+SPY.SMA.10 <- SMA(Cl(SPY), n = 5)
+SPY.SMA.200 <- SMA(Cl(SPY), n = 100)
+SPY.RSI.14 <- RSI(Cl(SPY))
+SPY.RSI.SellLevel <- xts(rep(70, NROW(SPY)), index(SPY))
+SPY.RSI.BuyLevel <- xts(rep(30, NROW(SPY)), index(SPY))
+
+
+highchart(type = "stock") %>%
+  # create axis :)
+  hc_yAxis_multiples(create_yaxis(3, height = c(2, 1, 1), turnopposite = TRUE)) %>%
+  # series :D
+  hc_add_series(SPY, yAxis = 0, name = "SPY") %>%
+  hc_add_series(SPY.SMA.10, yAxis = 0, name = "Fast MA") %>%
+  hc_add_series(SPY.SMA.200, yAxis = 0, name = "Slow MA") %>%
+  hc_add_series(SPY$SPY.Volume, color = "gray", yAxis = 1, name = "Volume", type = "column") %>%
+  hc_add_series(SPY.RSI.14, yAxis = 2, name = "Osciallator", color = hex_to_rgba("green", 0.7)) %>%
+  hc_add_series(SPY.RSI.SellLevel, color = hex_to_rgba("red", 0.7), yAxis = 2, name = "Sell level") %>%
+  hc_add_series(SPY.RSI.BuyLevel, color = hex_to_rgba("blue", 0.7), yAxis = 2, name = "Buy level") %>%
+  hc_tooltip(valueDecimals = 2) %>%
+  hc_size(height = 650)
+
+```
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+# Paneles de Control
+
+##Dashboards
+
+<center>[<img src="img/shiny_examples.jpg" width=75% align = "center" />](https://srgmld.shinyapps.io/muestra_produccion/)</center>
+
+Presionando en la imagen puede acceder a un ejemplo de panel de control.
+
+Existen una variedad de ejemplos y alternativas para desarrollo de paneles de control que se adaptan a todo tipo de requerimiento y necesidad.
+
+
+
+

@@ -1,0 +1,58 @@
+.title-slide {
+  /*background-image: url("latinr.png"), url("highcharter.png");*/
+  background-size:  17%, 17%, cover;
+  /* 4:3 */
+  background-position: 80% 0%, 90% 32%;
+  /* 16:9 */
+  /* background-position: 80% 16%, 69% 65%;*/
+  background-repeat: no-repeat;
+}
+
+.remark-slide-content{
+  font-size: 25px;
+}
+
+.herramientas {
+  background-color: #fff;
+  background-image: url("/img/interface_large_wwwsa.png");
+	background-position: center bottom 50px;
+	background-size: 85%;
+	border-bottom: 0px solid  #522D80;
+	box-shadow:  0 55px 0 #fff;
+}
+
+.p {
+  color:white;
+}
+
+.ggplot {
+  background-color: #fff;
+  background-image: url("/img/ggplotC_logo.png");
+	background-position: right 50px bottom 50px;
+	opacity: 0.5;
+	background-size: 35%;
+	border-bottom: 0px solid  #522D80;
+	box-shadow:  0 55px 0 #fff;
+}
+
+.title-slide {
+  background-image: url(img/cover1.png);
+  background-size: cover;
+}
+
+
+h1 {
+  font-family: 'Source Code Pro';
+}
+
+h2 {
+  font-family: 'Source Code Pro';
+}
+
+h3 {
+  font-family: 'Source Code Pro';
+}
+
+gral {
+  font-family: 'Source Code Pro';
+}

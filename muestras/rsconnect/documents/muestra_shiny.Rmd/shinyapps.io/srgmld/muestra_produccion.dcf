@@ -1,0 +1,12 @@
+name: muestra_produccion
+title: muestra_produccion
+username:
+account: srgmld
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2821218
+bundleId: 3726632
+url: https://srgmld.shinyapps.io/muestra_produccion/
+when: 1602434379.58496
+asMultiple: FALSE
+asStatic: FALSE
